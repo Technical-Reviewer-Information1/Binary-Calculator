@@ -220,98 +220,97 @@ st.markdown("---")
 st.markdown("## さらに学習を深めるために")
 
 st.markdown("### 2進数と10進数の変換練習")
-    st.markdown("### 2進数 ⇄ 10進数の変換")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("#### 2進数 → 10進数")
-        bin_to_dec_input = st.text_input("2進数を入力", value="1010", key="bin_to_dec")
-        if st.button("10進数に変換", key="convert_to_dec"):
-            if all(c in '01' for c in bin_to_dec_input):
-                decimal_val = int(bin_to_dec_input, 2)
-                st.success(f"2進数 {bin_to_dec_input} = 10進数 {decimal_val}")
-                
-                # 計算過程を表示
-                st.markdown("**計算過程:**")
-                calculation = []
-                for i, digit in enumerate(reversed(bin_to_dec_input)):
-                    if digit == '1':
-                        calculation.append(f"{digit} × 2^{i} = {2**i}")
-                    else:
-                        calculation.append(f"{digit} × 2^{i} = 0")
-                
-                st.write(" + ".join(calculation) + f" = {decimal_val}")
-            else:
-                st.error("0と1のみで構成された2進数を入力してください。")
-    
-    with col2:
-        st.markdown("#### 10進数 → 2進数")
-        dec_to_bin_input = st.number_input("10進数を入力", min_value=0, max_value=255, value=10, key="dec_to_bin")
-        if st.button("2進数に変換", key="convert_to_bin"):
-            binary_val = format(dec_to_bin_input, 'b')
-            st.success(f"10進数 {dec_to_bin_input} = 2進数 {binary_val}")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown("#### 2進数 → 10進数")
+    bin_to_dec_input = st.text_input("2進数を入力", value="1010", key="bin_to_dec")
+    if st.button("10進数に変換", key="convert_to_dec"):
+        if all(c in '01' for c in bin_to_dec_input):
+            decimal_val = int(bin_to_dec_input, 2)
+            st.success(f"2進数 {bin_to_dec_input} = 10進数 {decimal_val}")
             
             # 計算過程を表示
-            st.markdown("**計算過程（2で割り続ける方法）:**")
-            temp = dec_to_bin_input
-            steps = []
-            while temp > 0:
-                remainder = temp % 2
-                temp = temp // 2
-                steps.append(f"{temp * 2 + remainder} ÷ 2 = {temp} 余り {remainder}")
+            st.markdown("**計算過程:**")
+            calculation = []
+            for i, digit in enumerate(reversed(bin_to_dec_input)):
+                if digit == '1':
+                    calculation.append(f"{digit} × 2^{i} = {2**i}")
+                else:
+                    calculation.append(f"{digit} × 2^{i} = 0")
             
-            for step in steps:
-                st.write(step)
-            st.write(f"余りを下から読むと: {binary_val}")
+            st.write(" + ".join(calculation) + f" = {decimal_val}")
+        else:
+            st.error("0と1のみで構成された2進数を入力してください。")
+
+with col2:
+    st.markdown("#### 10進数 → 2進数")
+    dec_to_bin_input = st.number_input("10進数を入力", min_value=0, max_value=255, value=10, key="dec_to_bin")
+    if st.button("2進数に変換", key="convert_to_bin"):
+        binary_val = format(dec_to_bin_input, 'b')
+        st.success(f"10進数 {dec_to_bin_input} = 2進数 {binary_val}")
+        
+        # 計算過程を表示
+        st.markdown("**計算過程（2で割り続ける方法）:**")
+        temp = dec_to_bin_input
+        steps = []
+        while temp > 0:
+            remainder = temp % 2
+            temp = temp // 2
+            steps.append(f"{temp * 2 + remainder} ÷ 2 = {temp} 余り {remainder}")
+        
+        for step in steps:
+            st.write(step)
+        st.write(f"余りを下から読むと: {binary_val}")
 
 st.markdown("---")
 st.markdown("### もっと大きな数で練習")
-    st.markdown("### 16ビット演算にチャレンジ")
-    st.markdown("より大きな数での2進法演算を体験してみましょう！")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        big_num1 = st.text_input("16ビット2進数 1", value="0001101010110100", key="big1")
-        big_num2 = st.text_input("16ビット2進数 2", value="0010110101001011", key="big2")
-    
-    with col2:
-        operation = st.radio("演算を選択", ["加算", "減算"], key="big_op")
-    
-    if st.button("大きな数で計算", key="big_calc"):
-        if (all(c in '01' for c in big_num1) and all(c in '01' for c in big_num2) and 
-            len(big_num1) == 16 and len(big_num2) == 16):
-            
-            val1 = int(big_num1, 2)
-            val2 = int(big_num2, 2)
-            
-            if operation == "加算":
-                result = val1 + val2
-                result_bin = format(result, '016b')
-                st.code(f"""
-    {big_num1} ({val1})
+st.markdown("#### 16ビット演算にチャレンジ")
+st.markdown("より大きな数での2進法演算を体験してみましょう！")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    big_num1 = st.text_input("16ビット2進数 1", value="0001101010110100", key="big1")
+    big_num2 = st.text_input("16ビット2進数 2", value="0010110101001011", key="big2")
+
+with col2:
+    operation = st.radio("演算を選択", ["加算", "減算"], key="big_op")
+
+if st.button("大きな数で計算", key="big_calc"):
+    if (all(c in '01' for c in big_num1) and all(c in '01' for c in big_num2) and 
+        len(big_num1) == 16 and len(big_num2) == 16):
+        
+        val1 = int(big_num1, 2)
+        val2 = int(big_num2, 2)
+        
+        if operation == "加算":
+            result = val1 + val2
+            result_bin = format(result, '016b')
+            st.code(f"""
+{big_num1} ({val1})
 +)  {big_num2} ({val2})
 {'='*34}
-    {result_bin} ({result})
-                """)
-                st.success(f"16ビット加算の結果: {result_bin}")
-                
-            else:  # 減算
-                if val1 >= val2:
-                    result = val1 - val2
-                    result_bin = format(result, '016b')
-                    st.code(f"""
-    {big_num1} ({val1})
+{result_bin} ({result})
+""")
+            st.success(f"16ビット加算の結果: {result_bin}")
+            
+        else:  # 減算
+            if val1 >= val2:
+                result = val1 - val2
+                result_bin = format(result, '016b')
+                st.code(f"""
+{big_num1} ({val1})
 -)  {big_num2} ({val2})
 {'='*34}
-    {result_bin} ({result})
-                    """)
-                    st.success(f"16ビット減算の結果: {result_bin}")
-                else:
-                    st.error("被減数は減数以上である必要があります。")
-        else:
-            st.error("16桁の2進数（0と1のみ）を入力してください。")
+{result_bin} ({result})
+""")
+                st.success(f"16ビット減算の結果: {result_bin}")
+            else:
+                st.error("被減数は減数以上である必要があります。")
+    else:
+        st.error("16桁の2進数（0と1のみ）を入力してください。")
 
 st.markdown("---")
 st.markdown("### 🎓 学習のまとめ")
