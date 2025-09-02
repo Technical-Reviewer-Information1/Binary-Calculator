@@ -50,17 +50,30 @@ if st.button("筆算で計算する", key="calc_add"):
             else:
                 result_digits.insert(0, str(digit_sum))
         
-        # 筆算の表示
-        st.code(f"""
-繰り上がり: {''.join(['1' if carry[i] else ' ' for i in range(8)])}
-     {num1_add}
-+)   {num2_add}
-----------------
-     {''.join(result_digits)}
-""")
+        # 筆算の表示（より見やすく）
+        carry_display = ''.join(['¹' if carry[i] else ' ' for i in range(8)])
         
-        # ステップ解説
-        st.markdown("#### 各桁の計算:")
+        st.markdown("### 📊 筆算形式の表示")
+        st.markdown("""
+        <div style="font-family: 'Courier New', monospace; font-size: 16px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
+        <div style="color: #dc3545; font-weight: bold;">繰り上がり:  {}</div>
+        <div style="margin: 5px 0; font-size: 18px;">        {}</div>
+        <div style="margin: 5px 0; font-size: 18px;">   (+)  {}</div>
+        <div style="border-top: 2px solid #333; margin: 5px 0; padding-top: 5px;"></div>
+        <div style="font-size: 18px; font-weight: bold; color: #198754;">        {}</div>
+        </div>
+        """.format(carry_display, num1_add, num2_add, ''.join(result_digits)), unsafe_allow_html=True)
+        
+        # ステップ解説（桁番号付き）
+        st.markdown("#### 🔢 各桁の計算過程（右から左へ）")
+        
+        # 桁番号ヘッダーを表示
+        digit_header = ' '.join([f'{i+1}' for i in range(8)])
+        st.markdown(f"<div style='font-family: monospace; font-size: 14px; color: #6c757d; text-align: center;'>桁番号: {digit_header}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='font-family: monospace; font-size: 14px; color: #6c757d; text-align: center;'>数値:   {num1_add}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='font-family: monospace; font-size: 14px; color: #6c757d; text-align: center;'>      {num2_add}</div>", unsafe_allow_html=True)
+        st.markdown("---")
+        
         for i in range(7, -1, -1):
             digit1 = int(num1_add[i])
             digit2 = int(num2_add[i])
@@ -68,9 +81,12 @@ if st.button("筆算で計算する", key="calc_add"):
             total = digit1 + digit2 + carry_in
             
             if carry_in > 0:
-                st.write(f"桁{7-i+1}: {digit1} + {digit2} + {carry_in}(繰り上がり) = {total} → {total % 2} (繰り上がり: {1 if total >= 2 else 0})")
+                st.markdown(f"<div style='background-color: #fff3cd; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>桁{8-i}</strong>: <span style='color: #0d6efd;'>{digit1}</span> + <span style='color: #6f42c1;'>{digit2}</span> + <span style='color: #dc3545;'>{carry_in}(繰上)</span> = {total} → <strong style='color: #198754;'>{total % 2}</strong> (繰上: <span style='color: #dc3545;'>{1 if total >= 2 else 0}</span>)</div>", unsafe_allow_html=True)
             else:
-                st.write(f"桁{7-i+1}: {digit1} + {digit2} = {total} → {total % 2} {'(1繰り上がり)' if total >= 2 else ''}")
+                result_text = f"桁{8-i}: <span style='color: #0d6efd;'>{digit1}</span> + <span style='color: #6f42c1;'>{digit2}</span> = {total} → <strong style='color: #198754;'>{total % 2}</strong>"
+                if total >= 2:
+                    result_text += f" (繰上: <span style='color: #dc3545;'>1</span>)"
+                st.markdown(f"<div style='background-color: #f8f9fa; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>{result_text}</strong></div>", unsafe_allow_html=True)
         
         final_result = ''.join(result_digits)
         if len(final_result) > 8:
@@ -122,19 +138,30 @@ if st.button("筆算で計算する", key="calc_sub"):
                     else:
                         result_digits.insert(0, str(digits1[i] - borrow[i] - digits2[i]))
             
-            # 桁借りの表示
-            borrow_display = ''.join(['1' if borrow[i] else ' ' for i in range(4)])
+            # 桁借りの表示（より見やすく）
+            borrow_display = ''.join(['¹' if borrow[i] else ' ' for i in range(4)])
             
-            st.code(f"""
-桁借り:  {borrow_display}
-     {num1_sub}
--)   {num2_sub}
-----------------
-     {''.join(result_digits)}
-""")
+            st.markdown("### 📊 筆算形式の表示")
+            st.markdown("""
+            <div style="font-family: 'Courier New', monospace; font-size: 18px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
+            <div style="color: #dc3545; font-weight: bold;">桁借り:     {}</div>
+            <div style="margin: 5px 0; font-size: 20px;">        {}</div>
+            <div style="margin: 5px 0; font-size: 20px;">   (-)  {}</div>
+            <div style="border-top: 2px solid #333; margin: 5px 0; padding-top: 5px;"></div>
+            <div style="font-size: 20px; font-weight: bold; color: #198754;">        {}</div>
+            </div>
+            """.format(borrow_display, num1_sub, num2_sub, ''.join(result_digits)), unsafe_allow_html=True)
             
-            # ステップ解説
-            st.markdown("#### 各桁の計算:")
+            # ステップ解説（桁番号付き）
+            st.markdown("#### 🔢 各桁の計算過程（右から左へ）")
+            
+            # 桁番号ヘッダーを表示
+            digit_header = ' '.join([f'{i+1}' for i in range(4)])
+            st.markdown(f"<div style='font-family: monospace; font-size: 14px; color: #6c757d; text-align: center;'>桁番号: {digit_header}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='font-family: monospace; font-size: 14px; color: #6c757d; text-align: center;'>数値:   {num1_sub}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='font-family: monospace; font-size: 14px; color: #6c757d; text-align: center;'>      {num2_sub}</div>", unsafe_allow_html=True)
+            st.markdown("---")
+            
             temp_digits1 = [int(d) for d in num1_sub]
             temp_borrow = [0] * 4
             
@@ -143,13 +170,13 @@ if st.button("筆算で計算する", key="calc_sub"):
                 sub_digit = digits2[i]
                 
                 if current_digit >= sub_digit:
-                    st.write(f"桁{4-i}: {current_digit} - {sub_digit} = {current_digit - sub_digit}")
+                    st.markdown(f"<div style='background-color: #f8f9fa; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>桁{4-i}</strong>: <span style='color: #0d6efd;'>{current_digit}</span> - <span style='color: #6f42c1;'>{sub_digit}</span> = <strong style='color: #198754;'>{current_digit - sub_digit}</strong></div>", unsafe_allow_html=True)
                 else:
                     if i > 0:
                         temp_borrow[i-1] = 1
-                        st.write(f"桁{4-i}: {current_digit} - {sub_digit} = 桁借りして (2 + {current_digit}) - {sub_digit} = {2 + current_digit - sub_digit}")
+                        st.markdown(f"<div style='background-color: #fff3cd; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>桁{4-i}</strong>: <span style='color: #0d6efd;'>{current_digit}</span> - <span style='color: #6f42c1;'>{sub_digit}</span> = <span style='color: #dc3545;'>桁借り</span>して (2 + {current_digit}) - {sub_digit} = <strong style='color: #198754;'>{2 + current_digit - sub_digit}</strong></div>", unsafe_allow_html=True)
                     else:
-                        st.write(f"桁{4-i}: {current_digit} - {sub_digit} = {current_digit - sub_digit}")
+                        st.markdown(f"<div style='background-color: #f8f9fa; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>桁{4-i}</strong>: <span style='color: #0d6efd;'>{current_digit}</span> - <span style='color: #6f42c1;'>{sub_digit}</span> = <strong style='color: #198754;'>{current_digit - sub_digit}</strong></div>", unsafe_allow_html=True)
             
             st.success(f"答え: {''.join(result_digits)}")
             st.info("**ポイント**: 2進数の引き算で上の桁から「1」を借りてくると、その桁では「1」が2つあるものとして計算します。「10 - 1 = 1」と考えるのがコツです。")
@@ -186,10 +213,14 @@ if left_shift and all(c in '01' for c in num_shift) and len(num_shift) == 8:
     shifted = num_shift[1:] + '0'  # 左シフト
     shifted_val = int(shifted, 2)
     
-    st.code(f"""
-元の数:     {num_shift} (10進数: {original_val})
-左シフト後: {shifted} (10進数: {shifted_val})
-""")
+    st.markdown("### 📊 シフト演算の結果")
+    st.markdown("""
+    <div style="font-family: 'Courier New', monospace; font-size: 16px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
+    <div style="margin: 5px 0;">元の数:      <span style="font-weight: bold; color: #0d6efd;">{}</span> (10進数: {})</div>
+    <div style="margin: 10px 0; text-align: center; font-size: 18px;">↓ 左へ1ビットシフト</div>
+    <div style="margin: 5px 0;">左シフト後:  <span style="font-weight: bold; color: #198754;">{}</span> (10進数: {})</div>
+    </div>
+    """.format(num_shift, original_val, shifted, shifted_val), unsafe_allow_html=True)
     
     st.success(f"左に1ビットシフトすると、{original_val} → {shifted_val} になりました！")
     if shifted_val == original_val * 2:
@@ -201,10 +232,14 @@ elif right_shift and all(c in '01' for c in num_shift) and len(num_shift) == 8:
     shifted = '0' + num_shift[:-1]  # 右シフト
     shifted_val = int(shifted, 2)
     
-    st.code(f"""
-元の数:     {num_shift} (10進数: {original_val})
-右シフト後: {shifted} (10進数: {shifted_val})
-""")
+    st.markdown("### 📊 シフト演算の結果")
+    st.markdown("""
+    <div style="font-family: 'Courier New', monospace; font-size: 16px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
+    <div style="margin: 5px 0;">元の数:      <span style="font-weight: bold; color: #0d6efd;">{}</span> (10進数: {})</div>
+    <div style="margin: 10px 0; text-align: center; font-size: 18px;">↓ 右へ1ビットシフト</div>
+    <div style="margin: 5px 0;">右シフト後:  <span style="font-weight: bold; color: #198754;">{}</span> (10進数: {})</div>
+    </div>
+    """.format(num_shift, original_val, shifted, shifted_val), unsafe_allow_html=True)
     
     st.success(f"右に1ビットシフトすると、{original_val} → {shifted_val} になりました！")
     if shifted_val == original_val // 2:
@@ -288,24 +323,30 @@ if st.button("大きな数で計算", key="big_calc"):
         if operation == "加算":
             result = val1 + val2
             result_bin = format(result, '016b')
-            st.code(f"""
-{big_num1} ({val1})
-+)  {big_num2} ({val2})
-{'='*34}
-{result_bin} ({result})
-""")
+            st.markdown("### 📊 16ビット筆算の結果")
+            st.markdown("""
+            <div style="font-family: 'Courier New', monospace; font-size: 14px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
+            <div style="margin: 5px 0;">    <span style="font-weight: bold; color: #0d6efd;">{}</span> ({})</div>
+            <div style="margin: 5px 0;">(+) <span style="font-weight: bold; color: #6f42c1;">{}</span> ({})</div>
+            <div style="border-top: 2px solid #333; margin: 5px 0; padding-top: 5px;"></div>
+            <div style="font-weight: bold; color: #198754;">    {} ({})</div>
+            </div>
+            """.format(big_num1, val1, big_num2, val2, result_bin, result), unsafe_allow_html=True)
             st.success(f"16ビット加算の結果: {result_bin}")
             
         else:  # 減算
             if val1 >= val2:
                 result = val1 - val2
                 result_bin = format(result, '016b')
-                st.code(f"""
-{big_num1} ({val1})
--)  {big_num2} ({val2})
-{'='*34}
-{result_bin} ({result})
-""")
+                st.markdown("### 📊 16ビット筆算の結果")
+                st.markdown("""
+                <div style="font-family: 'Courier New', monospace; font-size: 14px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
+                <div style="margin: 5px 0;">    <span style="font-weight: bold; color: #0d6efd;">{}</span> ({})</div>
+                <div style="margin: 5px 0;">(-) <span style="font-weight: bold; color: #6f42c1;">{}</span> ({})</div>
+                <div style="border-top: 2px solid #333; margin: 5px 0; padding-top: 5px;"></div>
+                <div style="font-weight: bold; color: #198754;">    {} ({})</div>
+                </div>
+                """.format(big_num1, val1, big_num2, val2, result_bin, result), unsafe_allow_html=True)
                 st.success(f"16ビット減算の結果: {result_bin}")
             else:
                 st.error("被減数は減数以上である必要があります。")
