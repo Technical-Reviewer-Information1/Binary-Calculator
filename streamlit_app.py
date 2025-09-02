@@ -3,7 +3,7 @@ import time
 
 st.set_page_config(page_title="2進法の加算と減算", page_icon="🔢", layout="wide")
 
-st.title("2進法の加算と減算を体験的に学ぶ")
+st.title("2進法の加算と減算")
 st.caption("Created by Dit-Lab.(Daiki ITO)")
 st.caption("Supported by Tomoaki ATSUMI")
 
