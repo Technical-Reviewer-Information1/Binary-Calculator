@@ -1,7 +1,33 @@
 import streamlit as st
-import time
 
-st.set_page_config(page_title="2進法の加算と減算", page_icon="🔢", layout="wide")
+st.set_page_config(
+    page_title="2進法の加算と減算", 
+    page_icon="🔢", 
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
+# ライトモードを強制設定
+st.markdown("""
+<style>
+    .stApp {
+        background-color: white !important;
+        color: black !important;
+    }
+    .stMarkdown {
+        color: black !important;
+    }
+    .stTextInput > div > div > input {
+        background-color: white !important;
+        color: black !important;
+    }
+    .stButton > button {
+        background-color: #f8f9fa !important;
+        color: black !important;
+        border: 1px solid #dee2e6 !important;
+    }
+</style>
+""", unsafe_allow_html=True)
 
 st.title("2進法の加算と減算")
 st.caption("Created by Dit-Lab.(Daiki ITO)")
@@ -54,13 +80,14 @@ if st.button("筆算で計算する", key="calc_add"):
         carry_display = ''.join(['¹' if carry[i] else ' ' for i in range(8)])
         
         st.markdown("### 📊 筆算形式の表示")
+        # 等幅フォントでの正確な位置合わせ
         st.markdown("""
-        <div style="font-family: 'Courier New', monospace; font-size: 16px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
-        <div style="color: #dc3545; font-weight: bold;">繰り上がり:  {}</div>
-        <div style="margin: 5px 0; font-size: 18px;">        {}</div>
-        <div style="margin: 5px 0; font-size: 18px;">   (+)  {}</div>
-        <div style="border-top: 2px solid #333; margin: 5px 0; padding-top: 5px;"></div>
-        <div style="font-size: 18px; font-weight: bold; color: #198754;">        {}</div>
+        <div style="font-family: 'Consolas', 'Monaco', 'Lucida Console', monospace; font-size: 18px; background-color: #f8f9fa; padding: 25px; border-radius: 10px; border: 2px solid #e9ecef; line-height: 1.8;">
+        <div style="color: #dc3545; font-weight: bold; letter-spacing: 0.2em;">繰上り: {}</div>
+        <div style="margin: 8px 0; font-size: 20px; letter-spacing: 0.2em;">      {}</div>
+        <div style="margin: 8px 0; font-size: 20px; letter-spacing: 0.2em;"> (+) {}</div>
+        <div style="border-top: 3px solid #333; margin: 10px 0; padding-top: 8px;"></div>
+        <div style="font-size: 20px; font-weight: bold; color: #198754; letter-spacing: 0.2em;">      {}</div>
         </div>
         """.format(carry_display, num1_add, num2_add, ''.join(result_digits)), unsafe_allow_html=True)
         
@@ -142,13 +169,14 @@ if st.button("筆算で計算する", key="calc_sub"):
             borrow_display = ''.join(['¹' if borrow[i] else ' ' for i in range(4)])
             
             st.markdown("### 📊 筆算形式の表示")
+            # 等幅フォントでの正確な位置合わせ（4ビット用）
             st.markdown("""
-            <div style="font-family: 'Courier New', monospace; font-size: 18px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
-            <div style="color: #dc3545; font-weight: bold;">桁借り:     {}</div>
-            <div style="margin: 5px 0; font-size: 20px;">        {}</div>
-            <div style="margin: 5px 0; font-size: 20px;">   (-)  {}</div>
-            <div style="border-top: 2px solid #333; margin: 5px 0; padding-top: 5px;"></div>
-            <div style="font-size: 20px; font-weight: bold; color: #198754;">        {}</div>
+            <div style="font-family: 'Consolas', 'Monaco', 'Lucida Console', monospace; font-size: 20px; background-color: #f8f9fa; padding: 25px; border-radius: 10px; border: 2px solid #e9ecef; line-height: 1.8;">
+            <div style="color: #dc3545; font-weight: bold; letter-spacing: 0.3em;">桁借り: {}</div>
+            <div style="margin: 8px 0; font-size: 22px; letter-spacing: 0.3em;">     {}</div>
+            <div style="margin: 8px 0; font-size: 22px; letter-spacing: 0.3em;">(-) {}</div>
+            <div style="border-top: 3px solid #333; margin: 10px 0; padding-top: 8px;"></div>
+            <div style="font-size: 22px; font-weight: bold; color: #198754; letter-spacing: 0.3em;">     {}</div>
             </div>
             """.format(borrow_display, num1_sub, num2_sub, ''.join(result_digits)), unsafe_allow_html=True)
             
@@ -215,10 +243,10 @@ if left_shift and all(c in '01' for c in num_shift) and len(num_shift) == 8:
     
     st.markdown("### 📊 シフト演算の結果")
     st.markdown("""
-    <div style="font-family: 'Courier New', monospace; font-size: 16px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
-    <div style="margin: 5px 0;">元の数:      <span style="font-weight: bold; color: #0d6efd;">{}</span> (10進数: {})</div>
+    <div style="font-family: 'Consolas', 'Monaco', 'Lucida Console', monospace; font-size: 16px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
+    <div style="margin: 5px 0; letter-spacing: 0.1em;">元の数:     <span style="font-weight: bold; color: #0d6efd;">{}</span> (10進数: {})</div>
     <div style="margin: 10px 0; text-align: center; font-size: 18px;">↓ 左へ1ビットシフト</div>
-    <div style="margin: 5px 0;">左シフト後:  <span style="font-weight: bold; color: #198754;">{}</span> (10進数: {})</div>
+    <div style="margin: 5px 0; letter-spacing: 0.1em;">左シフト後: <span style="font-weight: bold; color: #198754;">{}</span> (10進数: {})</div>
     </div>
     """.format(num_shift, original_val, shifted, shifted_val), unsafe_allow_html=True)
     
@@ -234,10 +262,10 @@ elif right_shift and all(c in '01' for c in num_shift) and len(num_shift) == 8:
     
     st.markdown("### 📊 シフト演算の結果")
     st.markdown("""
-    <div style="font-family: 'Courier New', monospace; font-size: 16px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
-    <div style="margin: 5px 0;">元の数:      <span style="font-weight: bold; color: #0d6efd;">{}</span> (10進数: {})</div>
+    <div style="font-family: 'Consolas', 'Monaco', 'Lucida Console', monospace; font-size: 16px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
+    <div style="margin: 5px 0; letter-spacing: 0.1em;">元の数:     <span style="font-weight: bold; color: #0d6efd;">{}</span> (10進数: {})</div>
     <div style="margin: 10px 0; text-align: center; font-size: 18px;">↓ 右へ1ビットシフト</div>
-    <div style="margin: 5px 0;">右シフト後:  <span style="font-weight: bold; color: #198754;">{}</span> (10進数: {})</div>
+    <div style="margin: 5px 0; letter-spacing: 0.1em;">右シフト後: <span style="font-weight: bold; color: #198754;">{}</span> (10進数: {})</div>
     </div>
     """.format(num_shift, original_val, shifted, shifted_val), unsafe_allow_html=True)
     
@@ -325,11 +353,11 @@ if st.button("大きな数で計算", key="big_calc"):
             result_bin = format(result, '016b')
             st.markdown("### 📊 16ビット筆算の結果")
             st.markdown("""
-            <div style="font-family: 'Courier New', monospace; font-size: 14px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
-            <div style="margin: 5px 0;">    <span style="font-weight: bold; color: #0d6efd;">{}</span> ({})</div>
-            <div style="margin: 5px 0;">(+) <span style="font-weight: bold; color: #6f42c1;">{}</span> ({})</div>
+            <div style="font-family: 'Consolas', 'Monaco', 'Lucida Console', monospace; font-size: 14px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
+            <div style="margin: 5px 0; letter-spacing: 0.1em;">      <span style="font-weight: bold; color: #0d6efd;">{}</span> ({})</div>
+            <div style="margin: 5px 0; letter-spacing: 0.1em;"> (+) <span style="font-weight: bold; color: #6f42c1;">{}</span> ({})</div>
             <div style="border-top: 2px solid #333; margin: 5px 0; padding-top: 5px;"></div>
-            <div style="font-weight: bold; color: #198754;">    {} ({})</div>
+            <div style="font-weight: bold; color: #198754; letter-spacing: 0.1em;">      {} ({})</div>
             </div>
             """.format(big_num1, val1, big_num2, val2, result_bin, result), unsafe_allow_html=True)
             st.success(f"16ビット加算の結果: {result_bin}")
@@ -340,11 +368,11 @@ if st.button("大きな数で計算", key="big_calc"):
                 result_bin = format(result, '016b')
                 st.markdown("### 📊 16ビット筆算の結果")
                 st.markdown("""
-                <div style="font-family: 'Courier New', monospace; font-size: 14px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
-                <div style="margin: 5px 0;">    <span style="font-weight: bold; color: #0d6efd;">{}</span> ({})</div>
-                <div style="margin: 5px 0;">(-) <span style="font-weight: bold; color: #6f42c1;">{}</span> ({})</div>
+                <div style="font-family: 'Consolas', 'Monaco', 'Lucida Console', monospace; font-size: 14px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #e9ecef;">
+                <div style="margin: 5px 0; letter-spacing: 0.1em;">      <span style="font-weight: bold; color: #0d6efd;">{}</span> ({})</div>
+                <div style="margin: 5px 0; letter-spacing: 0.1em;"> (-) <span style="font-weight: bold; color: #6f42c1;">{}</span> ({})</div>
                 <div style="border-top: 2px solid #333; margin: 5px 0; padding-top: 5px;"></div>
-                <div style="font-weight: bold; color: #198754;">    {} ({})</div>
+                <div style="font-weight: bold; color: #198754; letter-spacing: 0.1em;">      {} ({})</div>
                 </div>
                 """.format(big_num1, val1, big_num2, val2, result_bin, result), unsafe_allow_html=True)
                 st.success(f"16ビット減算の結果: {result_bin}")
