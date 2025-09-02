@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 st.set_page_config(
     page_title="2進法の加算と減算", 
@@ -59,28 +60,39 @@ if st.button("筆算で計算する", key="calc_add"):
         carry_display = ''.join(['¹' if carry[i] else ' ' for i in range(8)])
         
         st.markdown("### 📊 筆算形式の表示")
-        # st.codeで正確な位置合わせ
-        st.markdown("📊 **筆算形式の表示**")
         
-        # 繰り上がりを先に表示
-        st.markdown(f"<span style='color: #dc3545; font-weight: bold;'>繰り上がり:</span>", unsafe_allow_html=True)
+        # 桁番号（右から1スタート）
+        digit_numbers = [str(i) for i in range(8, 0, -1)]
+        carry_row = [carry_display[i] if carry_display[i] != ' ' else '' for i in range(8)]
+        num1_row = list(num1_add)
+        num2_row = list(num2_add)
+        result_row = list(''.join(result_digits))
+        
+        # DataFrameで表作成
+        df = pd.DataFrame({
+            '桁番号': digit_numbers,
+            '繰上り': carry_row,
+            '数値①': num1_row,
+            '数値②': num2_row,
+            '結果': result_row
+        })
+        
+        # 表を表示
+        st.dataframe(df, use_container_width=True, hide_index=True)
+        
+        # 伝統的な筆算形式も表示
+        st.markdown("**伝統的な筆算形式:**")
         st.code(f"""
-     {carry_display}
-     {num1_add}
-(+)  {num2_add}
-================
-     {''.join(result_digits)}
+桁番号: 8 7 6 5 4 3 2 1
+繰上り:  {carry_display}
+        {num1_add}
+   (+)  {num2_add}
+   ================
+        {''.join(result_digits)}
 """)
         
         # ステップ解説（桁番号付き）
         st.markdown("#### 🔢 各桁の計算過程（右から左へ）")
-        
-        # 桁番号ヘッダーを表示
-        digit_header = ' '.join([f'{i+1}' for i in range(8)])
-        st.markdown(f"<div style='font-family: monospace; font-size: 14px; color: #6c757d; text-align: center;'>桁番号: {digit_header}</div>", unsafe_allow_html=True)
-        st.markdown(f"<div style='font-family: monospace; font-size: 14px; color: #6c757d; text-align: center;'>数値:   {num1_add}</div>", unsafe_allow_html=True)
-        st.markdown(f"<div style='font-family: monospace; font-size: 14px; color: #6c757d; text-align: center;'>      {num2_add}</div>", unsafe_allow_html=True)
-        st.markdown("---")
         
         for i in range(7, -1, -1):
             digit1 = int(num1_add[i])
@@ -89,9 +101,9 @@ if st.button("筆算で計算する", key="calc_add"):
             total = digit1 + digit2 + carry_in
             
             if carry_in > 0:
-                st.markdown(f"<div style='background-color: #fff3cd; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>桁{8-i}</strong>: <span style='color: #0d6efd;'>{digit1}</span> + <span style='color: #6f42c1;'>{digit2}</span> + <span style='color: #dc3545;'>{carry_in}(繰上)</span> = {total} → <strong style='color: #198754;'>{total % 2}</strong> (繰上: <span style='color: #dc3545;'>{1 if total >= 2 else 0}</span>)</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='background-color: #fff3cd; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>桁{i+1}</strong>: <span style='color: #0d6efd;'>{digit1}</span> + <span style='color: #6f42c1;'>{digit2}</span> + <span style='color: #dc3545;'>{carry_in}(繰上)</span> = {total} → <strong style='color: #198754;'>{total % 2}</strong> (繰上: <span style='color: #dc3545;'>{1 if total >= 2 else 0}</span>)</div>", unsafe_allow_html=True)
             else:
-                result_text = f"桁{8-i}: <span style='color: #0d6efd;'>{digit1}</span> + <span style='color: #6f42c1;'>{digit2}</span> = {total} → <strong style='color: #198754;'>{total % 2}</strong>"
+                result_text = f"桁{i+1}: <span style='color: #0d6efd;'>{digit1}</span> + <span style='color: #6f42c1;'>{digit2}</span> = {total} → <strong style='color: #198754;'>{total % 2}</strong>"
                 if total >= 2:
                     result_text += f" (繰上: <span style='color: #dc3545;'>1</span>)"
                 st.markdown(f"<div style='background-color: #f8f9fa; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>{result_text}</strong></div>", unsafe_allow_html=True)
@@ -152,26 +164,17 @@ if st.button("筆算で計算する", key="calc_sub"):
             st.markdown("### 📊 筆算形式の表示")
             # st.codeで正確な位置合わせ（4ビット用）
             st.markdown("📊 **筆算形式の表示**")
-            
-            # 桁借りを先に表示
-            st.markdown(f"<span style='color: #dc3545; font-weight: bold;'>桁借り:</span>", unsafe_allow_html=True)
             st.code(f"""
-   {borrow_display}
-   {num1_sub}
-(-) {num2_sub}
-==========
-   {''.join(result_digits)}
+桁番号: 1 2 3 4
+桁借り:  {borrow_display}
+       {num1_sub}
+  (-)  {num2_sub}
+  ==========
+       {''.join(result_digits)}
 """)
             
             # ステップ解説（桁番号付き）
             st.markdown("#### 🔢 各桁の計算過程（右から左へ）")
-            
-            # 桁番号ヘッダーを表示
-            digit_header = ' '.join([f'{i+1}' for i in range(4)])
-            st.markdown(f"<div style='font-family: monospace; font-size: 14px; color: #6c757d; text-align: center;'>桁番号: {digit_header}</div>", unsafe_allow_html=True)
-            st.markdown(f"<div style='font-family: monospace; font-size: 14px; color: #6c757d; text-align: center;'>数値:   {num1_sub}</div>", unsafe_allow_html=True)
-            st.markdown(f"<div style='font-family: monospace; font-size: 14px; color: #6c757d; text-align: center;'>      {num2_sub}</div>", unsafe_allow_html=True)
-            st.markdown("---")
             
             temp_digits1 = [int(d) for d in num1_sub]
             temp_borrow = [0] * 4
@@ -181,13 +184,13 @@ if st.button("筆算で計算する", key="calc_sub"):
                 sub_digit = digits2[i]
                 
                 if current_digit >= sub_digit:
-                    st.markdown(f"<div style='background-color: #f8f9fa; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>桁{4-i}</strong>: <span style='color: #0d6efd;'>{current_digit}</span> - <span style='color: #6f42c1;'>{sub_digit}</span> = <strong style='color: #198754;'>{current_digit - sub_digit}</strong></div>", unsafe_allow_html=True)
+                    st.markdown(f"<div style='background-color: #f8f9fa; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>桁{i+1}</strong>: <span style='color: #0d6efd;'>{current_digit}</span> - <span style='color: #6f42c1;'>{sub_digit}</span> = <strong style='color: #198754;'>{current_digit - sub_digit}</strong></div>", unsafe_allow_html=True)
                 else:
                     if i > 0:
                         temp_borrow[i-1] = 1
-                        st.markdown(f"<div style='background-color: #fff3cd; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>桁{4-i}</strong>: <span style='color: #0d6efd;'>{current_digit}</span> - <span style='color: #6f42c1;'>{sub_digit}</span> = <span style='color: #dc3545;'>桁借り</span>して (2 + {current_digit}) - {sub_digit} = <strong style='color: #198754;'>{2 + current_digit - sub_digit}</strong></div>", unsafe_allow_html=True)
+                        st.markdown(f"<div style='background-color: #fff3cd; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>桁{i+1}</strong>: <span style='color: #0d6efd;'>{current_digit}</span> - <span style='color: #6f42c1;'>{sub_digit}</span> = <span style='color: #dc3545;'>桁借り</span>して (2 + {current_digit}) - {sub_digit} = <strong style='color: #198754;'>{2 + current_digit - sub_digit}</strong></div>", unsafe_allow_html=True)
                     else:
-                        st.markdown(f"<div style='background-color: #f8f9fa; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>桁{4-i}</strong>: <span style='color: #0d6efd;'>{current_digit}</span> - <span style='color: #6f42c1;'>{sub_digit}</span> = <strong style='color: #198754;'>{current_digit - sub_digit}</strong></div>", unsafe_allow_html=True)
+                        st.markdown(f"<div style='background-color: #f8f9fa; padding: 8px; margin: 4px 0; border-radius: 5px;'><strong>桁{i+1}</strong>: <span style='color: #0d6efd;'>{current_digit}</span> - <span style='color: #6f42c1;'>{sub_digit}</span> = <strong style='color: #198754;'>{current_digit - sub_digit}</strong></div>", unsafe_allow_html=True)
             
             st.success(f"答え: {''.join(result_digits)}")
             st.info("**ポイント**: 2進数の引き算で上の桁から「1」を借りてくると、その桁では「1」が2つあるものとして計算します。「10 - 1 = 1」と考えるのがコツです。")
