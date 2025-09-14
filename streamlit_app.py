@@ -9,7 +9,7 @@ st.set_page_config(
 )
 
 
-st.title("2進法の加算と減算")
+st.title("2進法の加算と減算（pp.142-143）")
 st.caption("Created by Dit-Lab.(Daiki ITO)")
 st.caption("Supported by Tomoaki ATSUMI")
 
