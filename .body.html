@@ -1,0 +1,102 @@
+  <section class="step" id="step1">
+    <h2><span class="no">STEP 1</span>加算を1桁ずつ見る</h2>
+    <p class="desc">2進法では <span class="mono">1＋1＝10</span>。つまり<strong>0を書いて1くり上がる</strong>だけです。右から順に確かめましょう。</p>
+
+    <div class="panel">
+      <div class="grid c2">
+        <div>
+          <label class="fld" for="addA">1つ目（2進法8桁）</label>
+          <input type="text" id="addA" class="mono" value="01011010" maxlength="8">
+          <label class="fld" style="margin-top:10px" for="addB">2つ目</label>
+          <input type="text" id="addB" class="mono" value="01101011" maxlength="8">
+          <div class="btn-row" style="margin-top:10px">
+            <button class="btn primary" id="addStep">1桁ずつ進む ▶</button>
+            <button class="btn" id="addAll">最後まで</button>
+            <button class="btn ghost" id="addReset">最初から</button>
+          </div>
+          <div class="note" id="addNote" style="margin-top:12px"></div>
+        </div>
+        <div>
+          <div class="calcwrap"><div class="calcgrid" id="addGrid"></div></div>
+          <div class="metrics" style="margin-top:12px">
+            <div class="metric"><div class="k">10進法で確かめる</div><div class="v" id="addCheck" style="font-size:1.1rem">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="step2">
+    <h2><span class="no">STEP 2</span>減算（くり下がり）</h2>
+    <p class="desc"><span class="mono">0−1</span> のときは上の位から<strong>1を借りて 10−1＝1</strong>とします。10進法と同じ考え方です。</p>
+    <div class="panel">
+      <div class="grid c2">
+        <div>
+          <label class="fld" for="subA">引かれる数</label>
+          <input type="text" id="subA" class="mono" value="1011" maxlength="8">
+          <label class="fld" style="margin-top:10px" for="subB">引く数</label>
+          <input type="text" id="subB" class="mono" value="0101" maxlength="8">
+          <div class="btn-row" style="margin-top:10px">
+            <button class="btn primary" id="subStep">1桁ずつ進む ▶</button>
+            <button class="btn" id="subAll">最後まで</button>
+            <button class="btn ghost" id="subReset">最初から</button>
+          </div>
+          <div class="note" id="subNote" style="margin-top:12px"></div>
+        </div>
+        <div>
+          <div class="calcwrap"><div class="calcgrid" id="subGrid"></div></div>
+          <div class="metrics" style="margin-top:12px">
+            <div class="metric"><div class="k">10進法で確かめる</div><div class="v" id="subCheck" style="font-size:1.1rem">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="step3">
+    <h2><span class="no">STEP 3</span>2倍・半分はビットをずらすだけ</h2>
+    <p class="desc">10進法で10倍すると桁が1つ左へ動くのと同じで、<strong>2進法では2倍すると1桁左へずれます</strong>。</p>
+    <div class="panel">
+      <label class="fld" for="shiftIn">もとの数（2進法8桁）</label>
+      <input type="text" id="shiftIn" class="mono" value="00101000" maxlength="8" style="max-width:220px">
+      <div style="margin-top:14px">
+        <div style="font-size:.84rem;color:var(--ink-2);text-align:center">もとの数</div>
+        <div class="shiftrow" id="shiftOrig"></div>
+        <div style="font-size:.84rem;color:var(--ink-2);text-align:center">2倍（左へ1つずらす）</div>
+        <div class="shiftrow" id="shiftLeft"></div>
+        <div style="font-size:.84rem;color:var(--ink-2);text-align:center">半分（右へ1つずらす）</div>
+        <div class="shiftrow" id="shiftRight"></div>
+      </div>
+      <div class="note" id="shiftNote" style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <section class="step" id="step4">
+    <h2><span class="no">STEP 4</span>計算ドリル</h2>
+    <div class="panel">
+      <div class="qhead">
+        <span class="badge" id="dProgress">1 問目</span>
+        <span class="badge">正解 <span class="score" id="dScore">0</span> / <span class="score" id="dTotal">0</span></span>
+      </div>
+      <div class="card-q"><div class="q-scene" id="dText"></div></div>
+      <div class="choice4" id="dChoices"></div>
+      <div class="note" id="dFb" hidden style="margin-top:12px"></div>
+      <div class="btn-row" style="margin-top:12px"><button class="btn primary" id="dNext">次の問題</button></div>
+    </div>
+  </section>
+
+  <section class="step" id="glossary">
+    <h2><span class="no">用語</span>この節で出てくることば</h2>
+    <div id="glossBox"></div>
+  </section>
+
+  <section class="step">
+    <h2><span class="no">まとめ</span>2進法の計算のポイント</h2>
+    <ul style="margin:0;padding-left:1.2em;color:var(--ink-2);font-size:.92rem;line-height:2.05">
+      <li>加算：<span class="mono">0+0=0、0+1=1、1+1=10</span>（0を書いて1くり上がる）。</li>
+      <li>減算：<span class="mono">0−1</span> は上の位から借りて <span class="mono">10−1=1</span>。</li>
+      <li><strong>2倍＝左へ1ビットずらす</strong>、<strong>半分＝右へ1ビットずらす</strong>。</li>
+      <li>10進法に直して検算するとまちがいに気づきやすい。</li>
+      <li>決まったビット数を超えるとあふれる（オーバーフロー）。8ビットなら0〜255まで。</li>
+    </ul>
+  </section>
