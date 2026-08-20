@@ -180,6 +180,12 @@
       '10進法では <strong>' + dec(dAns) + '</strong> です。';
   }
 
+  /* 本文の問題 */
+  function drawBook() {
+    if (!document.getElementById('bookBox')) return;
+    window.Quiz.choice('bookBox', 'bookNote', [{"k": "ア", "q": "01011010（2）＋01101011（2）は。", "ch": ["00110001（2）", "01111011（2）", "11000100（2）", "11000101（2）"], "a": 3, "why": "90＋107＝197。197 ＝ 128＋64＋4＋1 ＝ 11000101（2）です。<strong>桁上がりを忘れないこと。</strong>"}, {"k": "イ", "q": "1011（2）－0101（2）は。", "ch": ["1100（2）", "0110（2）", "1110（2）", "0010（2）"], "a": 1, "why": "11－5＝6 ＝ 0110（2）です。"}, {"k": "ウ", "q": "00101000（2）を2倍すると。", "ch": ["00010100（2）", "00101001（2）", "01010000（2）", "10000000（2）"], "a": 2, "why": "2倍は<strong>左に1ビットずらす</strong>だけ（左シフト）。00101000 → 01010000 です。40×2＝80 で確かめられます。"}], "本文の答えは【ア】③　【イ】①　【ウ】② です。");
+  }
+
   function init() {
     ['addA', 'addB'].forEach(i => $(i).addEventListener('input', () => { addPos = 0; drawAdd(); }));
     $('addStep').addEventListener('click', () => { addPos = Math.min(9, addPos + 1); drawAdd(); });
@@ -193,6 +199,7 @@
     $('dNext').addEventListener('click', newDrill);
     window.Terms.glossary($('glossBox'), ['2進法', '基数変換', '16進法', '補数', 'デジタル']);
     drawAdd(); drawSub(); drawShift(); newDrill();
+    drawBook();
     window.Terms.attach();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
